@@ -1,11 +1,6 @@
 package Model;
 
-import Control.GameControl;
-import View.GamePanel;
-
-import javax.imageio.ImageIO;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -14,12 +9,16 @@ import static View.SettingsDimension.maxMapRow;
 
 public class Map {
 
-    public int[][] mapTileNum;
+    public static int[][] mapTileNum;
 
     public Map() {
         mapTileNum = new int[maxMapCol][maxMapRow];
         loadMap("/map1/pac man pannel.txt");
     }
+
+
+
+
     public int[][] getMapTileNum() {
         return mapTileNum;
     }

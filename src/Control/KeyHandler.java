@@ -1,7 +1,5 @@
 package Control;
 
-import View.PlayerManager;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 

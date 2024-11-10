@@ -1,21 +1,21 @@
 package Control;
 
-import Model.Map;
 import View.GamePanel;
 import View.PlayerManager;
 
 import javax.swing.*;
-import java.awt.*;
-
-import static View.SettingsDimension.tilesSize;
 
 
 public class GameControl extends JPanel implements Runnable {
+
     PlayerManager pl = PlayerManager.getInstance();
+
     KeyHandler keyH = KeyHandler.getInstance();
+
     Thread gameThread;
     int FPS = 60;
     GamePanel gp;
+
     public GameControl() {
 
         this.addKeyListener(keyH);
@@ -23,6 +23,7 @@ public class GameControl extends JPanel implements Runnable {
         this.gp.addKeyListener(keyH);
 
     }
+
 
 
     public void startGameThread() {

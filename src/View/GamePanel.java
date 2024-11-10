@@ -1,8 +1,7 @@
 package View;
 
-import Control.GameControl;
+import Control.CollisionChecker;
 import Control.KeyHandler;
-import Model.Map;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +11,11 @@ import static View.SettingsDimension.*;
 public class GamePanel extends JPanel {
     PlayerManager pl = PlayerManager.getInstance();
     TileManager tm = new TileManager();
+
+
     private static GamePanel gpInstance;
     KeyHandler keyH;
+
     private GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);

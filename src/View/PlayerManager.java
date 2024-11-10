@@ -1,5 +1,6 @@
 package View;
 
+import Control.CollisionChecker;
 import Control.KeyHandler;
 import Model.Entity;
 
@@ -12,26 +13,36 @@ import static View.SettingsDimension.*;
 
 public class PlayerManager extends Entity {
 
-    public int pcPosX;
-    public int pcPosY;
-    private  static PlayerManager playerInstance;
-    KeyHandler keyH=KeyHandler.getInstance();
-    private PlayerManager( ) {
-        pcPosX = screenWidth / 2 - (tilesSize / 2);
-        pcPosY = ((screenHeight / 3)*2) - (tilesSize / 2);
+
+    private static PlayerManager playerInstance;
+    KeyHandler keyH = KeyHandler.getInstance();
+    CollisionChecker cc = CollisionChecker.getInstance();
+
+
+    private PlayerManager() {
+        pcPosX = 12*tilesSize -3 ;
+        pcPosY = 21*tilesSize  ;
+        solidArea = new Rectangle();
+        solidArea.x = 6;
+        solidArea.y = 6;
+        solidArea.width = 14;
+        solidArea.height = 12;
+
         setDefaultValues();
         getPlayerImage();
     }
 
-    public  static PlayerManager getInstance(){
-        if(playerInstance==null){
-            playerInstance= new PlayerManager();
+    public static PlayerManager getInstance() {
+        if (playerInstance == null) {
+            playerInstance = new PlayerManager();
         }
         return playerInstance;
     }
+
     public void setDefaultValues() {
+
         speed = 3;
-        direction = "right";
+        direction = "down";
     }
 
     public void getPlayerImage() {
@@ -51,6 +62,7 @@ public class PlayerManager extends Entity {
             e.printStackTrace();
         }
     }
+
     public void update() {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
@@ -63,21 +75,32 @@ public class PlayerManager extends Entity {
                 direction = "right";
             }
 
-            switch (direction) {
-                case "up":
-                    pcPosY -= speed;
-                    break;
-                case "down":
-                    pcPosY += speed;
-                    break;
-                case "left":
-                    pcPosX -= speed;
-                    break;
-                case "right":
-                    pcPosX += speed;
-                    break;
-            }
+           collisionOn = false;
+            cc.checkTile(this);
+            if (collisionOn == false) {
+                switch (direction) {
+                    case "up":
+                        pcPosY -= speed;
+                        break;
+                    case "down":
+                        pcPosY += speed;
+                        break;
+                    case "left":
+                        pcPosX -= speed;
+                        if (pcPosX <= 8 ) {
+                            pcPosX = 24 * 25 - 8;
+                        }
+                        break;
+                    case "right":
+                        pcPosX += speed;
+                        if (pcPosX >= 24 * 25 - 22 ) {
+                        pcPosX = 8;
+                    }
 
+
+                        break;
+                }
+           }
             spriteCounter++;
             if (spriteCounter > 10) {
                 if (spriteNum == 1) {
@@ -92,6 +115,7 @@ public class PlayerManager extends Entity {
             }
         }
     }
+
     public void draw(Graphics2D g2) {
 
         BufferedImage image = null;
@@ -141,6 +165,6 @@ public class PlayerManager extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, pcPosX, pcPosY, tilesSize-(tilesSize/4), tilesSize-(tilesSize/4), null);
+        g2.drawImage(image, pcPosX, pcPosY, 24 , 24 , null);
     }
 }
