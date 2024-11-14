@@ -5,6 +5,7 @@ import Control.KeyHandler;
 import Model.Coins;
 import Model.Entity;
 
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,6 +33,11 @@ public class PlayerManager extends Entity {
     private long deathTime = 0;
     private boolean waitingForInput = false;
 
+    private FruitManager fruits;
+    private int lastFruitSpawnScore = 0;
+    private static final int SCORE_INTERVAL_FOR_FRUIT = 200; // Spawn interval
+    private static final int MINIMUM_SCORE_FOR_FRUIT = 50;
+
     private PlayerManager() {
         pcPosX = 13 * tilesSize - tilesSize;
         pcPosY = 21 * tilesSize;
@@ -45,6 +51,8 @@ public class PlayerManager extends Entity {
         ghosts = new GhostsManager(this);
         setDefaultValues();
         getPlayerImage();
+
+        fruits = new FruitManager (this);
     }
 
     public static PlayerManager getInstance() {
@@ -69,6 +77,7 @@ public class PlayerManager extends Entity {
     public GhostsManager getGhosts() {
         return ghosts;
     }
+    public FruitManager getFruits(){return fruits;}
 
     public boolean isInvincible() {
         return invincible;
@@ -109,9 +118,10 @@ public class PlayerManager extends Entity {
         }
     }
 
+
     public void handlePowerModeCollision(GhostsManager ghosts) {
         // Pour chaque fantôme
-        for (int i = 0; i < ghosts.getGhostCount(); i++) {
+        for (int i = 0; i < getGhosts().getGhostCount(); i++) {
             // Vérifier si le joueur est en collision avec le fantôme
             if (checkGhostCollision(i)) {
                 if (coins.powerMode) {
@@ -166,12 +176,18 @@ public class PlayerManager extends Entity {
     }
 
     public void update() {
+        fruits.update();
         if (waitingForInput) {
             if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
                 waitingForInput = false;  // Le joueur peut maintenant bouger
             } else {
                 return;  // Ne pas continuer l'update si on attend toujours l'input
             }
+        }
+        if (coins.score >= MINIMUM_SCORE_FOR_FRUIT &&
+                coins.score >= lastFruitSpawnScore + SCORE_INTERVAL_FOR_FRUIT) {
+            fruits.spawn(coins.score);
+            lastFruitSpawnScore = coins.score;
         }
         if (keyH.pausePressed || isGameOver) {
             if (isGameOver) {
@@ -360,14 +376,7 @@ public class PlayerManager extends Entity {
     }
 
     public void die() {
-//        if (!invincible) {
-//            lives--;
-//            if (lives > 0) {
-//                resetPosition();
-//            } else {
-//                gameOver();
-//            }
-//        }
+
         if (!invincible) {
             lives--;
             deathTime = System.currentTimeMillis();

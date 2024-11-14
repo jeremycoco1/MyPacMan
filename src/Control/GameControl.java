@@ -62,35 +62,11 @@ public class GameControl extends JPanel implements Runnable {
         if (!keyH.pausePressed) {
             pl.update();
             pl.getGhosts().updateGhosts();
-//            checkCollisions();
+
         }
     }
 
-//    private void checkCollisions() {
-//        Rectangle pacmanArea = new Rectangle(pl.getPcPosX() + pl.solidArea.x,
-//                pl.getPcPosY() + pl.solidArea.y,
-//                pl.solidArea.width,
-//                pl.solidArea.height);
-//
-//        if (!pl.isInvincible()) {
-//            Rectangle ghostArea = new Rectangle();
-//            ghostArea.width = pl.getGhosts().solidArea.width;
-//            ghostArea.height = pl.getGhosts().solidArea.height;
-//
-//            checkGhostCollision(pacmanArea, ghostArea, pl.getGhosts().redGhostPosX, pl.getGhosts().redGhostPosY);
-//            checkGhostCollision(pacmanArea, ghostArea, pl.getGhosts().blueGhostPosX, pl.getGhosts().blueGhostPosY);
-//            checkGhostCollision(pacmanArea, ghostArea, pl.getGhosts().purpleGhostPosX, pl.getGhosts().purpleGhostPosY);
-//            checkGhostCollision(pacmanArea, ghostArea, pl.getGhosts().greenGhostPosX, pl.getGhosts().greenGhostPosY);
-//        }
-//    }
-//
-//    private void checkGhostCollision(Rectangle pacmanArea, Rectangle ghostArea, int ghostX, int ghostY) {
-//        ghostArea.x = ghostX + pl.getGhosts().solidArea.x;
-//        ghostArea.y = ghostY + pl.getGhosts().solidArea.y;
-//        if (pacmanArea.intersects(ghostArea)) {
-//            pl.die();
-//        }
-//    }
+
 }
 
 
