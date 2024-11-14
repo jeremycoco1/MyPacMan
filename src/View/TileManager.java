@@ -11,14 +11,14 @@ import java.io.IOException;
 import static View.SettingsDimension.*;
 
 public class TileManager {
-    public static Tiles[] tile;
 
+    public  Tiles[] tile;
 
     public TileManager() {
-
         tile = new Tiles[20];
         getTileImage();
     }
+
 
 
     public void getTileImage() {
@@ -88,7 +88,6 @@ public class TileManager {
 
         int mapCol = 0;
         int mapRow = 0;
-//        int screenRow = 5;
         while (mapCol < maxMapCol && mapRow < maxMapRow) {
             int tileNum = Map.mapTileNum[mapCol][mapRow];
 
@@ -100,10 +99,7 @@ public class TileManager {
 
             if (mapCol == maxMapCol) {
                 mapCol = 0;
-
                 mapRow++;
-//                screenRow++;
-
             }
         }
     }

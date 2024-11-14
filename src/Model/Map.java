@@ -16,13 +16,6 @@ public class Map {
         loadMap("/map1/pac man pannel.txt");
     }
 
-
-
-
-    public int[][] getMapTileNum() {
-        return mapTileNum;
-    }
-
     public void loadMap(String filePath) {
         try {
             InputStream is = getClass().getResourceAsStream(filePath);
@@ -31,11 +24,9 @@ public class Map {
             int col = 0;
             int row = 0;
             while (col < maxMapCol && row < maxMapRow) {
-
                 String line = br.readLine();
+                String[] numbers = line.split(" ");
                 while (col < maxMapCol) {
-                    String[] numbers = line.split(" ");
-
                     int num = Integer.parseInt(numbers[col]);
 
                     mapTileNum[col][row] = num;

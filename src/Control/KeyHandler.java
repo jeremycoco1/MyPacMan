@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     public boolean upPressed, downPressed, rightPressed, leftPressed;
+    public boolean pausePressed;
     private  static KeyHandler kInstance;
 
 
@@ -23,34 +24,39 @@ public class KeyHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        if (code == KeyEvent.VK_W) {
-            upPressed = true;
+        if (code == KeyEvent.VK_ENTER) { // Détection de la touche Entrée
+            pausePressed = !pausePressed; // Inverse l'état de pause
         }
-        if (code == KeyEvent.VK_S) {
-            downPressed = true;
-        }
-        if (code == KeyEvent.VK_D) {
-            rightPressed = true;
-        }
-        if (code == KeyEvent.VK_A) {
-            leftPressed = true;
+        if (!pausePressed) {
+
+            if (code == KeyEvent.VK_UP) {
+                upPressed = true;
+                downPressed = false;
+                rightPressed = false;
+                leftPressed = false;
+            }
+            if (code == KeyEvent.VK_DOWN) {
+                downPressed = true;
+                upPressed = false;
+                rightPressed = false;
+                leftPressed = false;
+            }
+            if (code == KeyEvent.VK_RIGHT) {
+                rightPressed = true;
+                downPressed = false;
+                upPressed = false;
+                leftPressed = false;
+            }
+            if (code == KeyEvent.VK_LEFT) {
+                leftPressed = true;
+                rightPressed = false;
+                downPressed = false;
+                upPressed = false;
+            }
         }
     }
-
     @Override
     public void keyReleased(KeyEvent e) {
-        int code = e.getKeyCode();
-        if (code == KeyEvent.VK_W) {
-            upPressed = false;
-        }
-        if (code == KeyEvent.VK_S) {
-            downPressed = false;
-        }
-        if (code == KeyEvent.VK_D) {
-            rightPressed = false;
-        }
-        if (code == KeyEvent.VK_A) {
-            leftPressed = false;
-        }
+
     }
 }
