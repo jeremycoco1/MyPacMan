@@ -1,7 +1,5 @@
-package View;
+package Control;
 
-import Control.CollisionChecker;
-import Control.KeyHandler;
 import Model.Coins;
 import Model.Entity;
 
@@ -12,33 +10,39 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 
-import static Model.Coins.POWER_MODE_DURATION;
 import static View.SettingsDimension.*;
 
 
 public class PlayerManager extends Entity {
 
-
-    private static PlayerManager playerInstance;
-    KeyHandler keyH = KeyHandler.getInstance();
-    CollisionChecker cc = CollisionChecker.getInstance();
+    KeyHandler keyH;
+    CollisionChecker cc;
     Coins coins;
+    GhostsManager ghosts;
+    FruitManager fruits;
+    TileManager tm;
+
+
     private int lives = 3;
     private boolean invincible = false;
 
 
-    GhostsManager ghosts;
     private boolean isGameOver = false;
     private long gameOverDelay = 1500; // Délai de 1.5 secondes avant reset
     private long deathTime = 0;
     private boolean waitingForInput = false;
 
-    private FruitManager fruits;
+
     private int lastFruitSpawnScore = 0;
     private static final int SCORE_INTERVAL_FOR_FRUIT = 200; // Spawn interval
     private static final int MINIMUM_SCORE_FOR_FRUIT = 50;
 
-    private PlayerManager() {
+    public PlayerManager(KeyHandler keyH,
+                         CollisionChecker cc,
+                         TileManager tm) {
+        this.keyH = keyH;
+        this.cc = cc;
+        this.tm = tm;
         pcPosX = 13 * tilesSize - tilesSize;
         pcPosY = 21 * tilesSize;
         solidArea = new Rectangle();
@@ -47,20 +51,21 @@ public class PlayerManager extends Entity {
         solidArea.width = 12;
         solidArea.height = 12;
 
-        coins = new Coins(this);
-        ghosts = new GhostsManager(this);
+        this.coins = new Coins(this);
+        this.ghosts = new GhostsManager(this, cc);
+        this.fruits = new FruitManager(this, tm);
         setDefaultValues();
         getPlayerImage();
 
-        fruits = new FruitManager (this);
+
     }
 
-    public static PlayerManager getInstance() {
-        if (playerInstance == null) {
-            playerInstance = new PlayerManager();
-        }
-        return playerInstance;
-    }
+//    public static PlayerManager getInstance() {
+//        if (playerInstance == null) {
+//            playerInstance = new PlayerManager();
+//        }
+//        return playerInstance;
+//    }
 
     public int getPcPosX() {
         return pcPosX;
@@ -77,7 +82,10 @@ public class PlayerManager extends Entity {
     public GhostsManager getGhosts() {
         return ghosts;
     }
-    public FruitManager getFruits(){return fruits;}
+
+    public FruitManager getFruits() {
+        return fruits;
+    }
 
     public boolean isInvincible() {
         return invincible;

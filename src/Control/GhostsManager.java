@@ -1,6 +1,5 @@
-package View;
+package Control;
 
-import Control.CollisionChecker;
 import Model.Entity;
 
 import javax.imageio.ImageIO;
@@ -13,7 +12,8 @@ import java.util.Random;
 import static View.SettingsDimension.*;
 
 public class GhostsManager extends Entity {
-    private CollisionChecker cc;
+    CollisionChecker cc;
+    PlayerManager pl;
     private Random random;
 
 
@@ -29,13 +29,12 @@ public class GhostsManager extends Entity {
     private String[] currentDirections = new String[4];
     private boolean[] isVulnerable = new boolean[4];
 
-    PlayerManager pl;
 
-    public GhostsManager(PlayerManager playerManager) {
+    public GhostsManager(PlayerManager playerManager, CollisionChecker cc) {
 
         ghostSize = 24;
         this.pl = playerManager;
-        cc = CollisionChecker.getInstance();
+        this.cc = cc;
         random = new Random();
         solidArea = new Rectangle(0, 0, 20, 20);
         speed = ghostSpeed;
@@ -170,10 +169,11 @@ public class GhostsManager extends Entity {
                 break;
         }
     }
+
     public void drawGhosts(Graphics2D g2) {
         // Modifier la méthode pour dessiner les fantômes en bleu quand ils sont vulnérables
         for (int i = 0; i < 4; i++) {
-            int x , y ;
+            int x, y;
             BufferedImage ghostImage;
 
             switch (i) {

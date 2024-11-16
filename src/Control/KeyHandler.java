@@ -6,15 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
     public boolean upPressed, downPressed, rightPressed, leftPressed;
     public boolean pausePressed;
-    private  static KeyHandler kInstance;
 
-
-    public  static KeyHandler getInstance(){
-        if(kInstance==null){
-            kInstance= new KeyHandler();
-        }
-        return kInstance;
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {

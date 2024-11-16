@@ -2,28 +2,19 @@ package Control;
 
 import Model.Entity;
 import Model.Map;
-import View.TileManager;
 
 import static View.SettingsDimension.tilesSize;
 
 public class CollisionChecker {
     TileManager tm;
     Map map;
-    private static CollisionChecker checkerInstance;
 
-    private CollisionChecker(TileManager tm) {
+
+    public CollisionChecker(TileManager tm) {
         this.tm=tm;
         this.map = new Map();
 
     }
-
-    public static CollisionChecker getInstance() {
-        if (checkerInstance == null) {
-            checkerInstance = new CollisionChecker(new TileManager());
-        }
-        return checkerInstance;
-    }
-
     public void checkTile(Entity entity) {
         int entityLeftX = entity.pcPosX + entity.solidArea.x;
         int entityRightX = entity.pcPosX + entity.solidArea.x + entity.solidArea.width ;

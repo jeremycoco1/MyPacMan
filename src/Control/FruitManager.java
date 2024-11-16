@@ -1,10 +1,9 @@
-package View;
+package Control;
 
 import Model.Fruit;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,8 +12,11 @@ import static Model.Map.mapTileNum;
 import static View.SettingsDimension.tilesSize;
 
 public class FruitManager {
-    private Random random = new Random();
+
+    PlayerManager player;
     TileManager tm;
+
+    private Random random = new Random();
     ArrayList<Fruit> fruits;
     private Fruit currentFruit;
     private boolean isVisible = false;
@@ -23,10 +25,10 @@ public class FruitManager {
     private long spawnTime;
     private static final long FRUIT_DURATION = 5000; // 5 secondes
     private Rectangle solidArea;
-    private PlayerManager player;
 
-    public FruitManager(PlayerManager player) {
-        tm=new TileManager();
+
+    public FruitManager(PlayerManager player, TileManager tm) {
+        this.tm = tm;
         this.player = player;
         this.fruits = new ArrayList<>();
         initializeFruitTypes();
@@ -124,7 +126,7 @@ public class FruitManager {
             int row = random.nextInt(23) + 1; // Position en lignes
 
             // Vérifier si la position est valide (pas un mur)
-            if (mapTileNum[col][row] ==1) {
+            if (mapTileNum[col][row] == 1) {
                 return new Point(col * tilesSize, row * tilesSize);
             }
             attempt++;

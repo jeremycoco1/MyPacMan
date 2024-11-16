@@ -1,14 +1,24 @@
+import Control.CollisionChecker;
 import Control.GameControl;
+import Control.KeyHandler;
 import View.GamePanel;
+import Control.PlayerManager;
+import Control.TileManager;
 import View.WindowManager;
+
+
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        WindowManager window = new WindowManager();
-
-        GameControl gc = new GameControl();
+        KeyHandler keyH = new KeyHandler();
+        TileManager tm = new TileManager();
+        CollisionChecker cc = new CollisionChecker(tm);
+        PlayerManager pl = new PlayerManager(keyH, cc,tm);
+        GamePanel gp = new GamePanel(pl, keyH,tm);
+        WindowManager window = new WindowManager(gp);
+        GameControl gc = new GameControl(pl, keyH, gp);
         gc.startGameThread();
     }
 }

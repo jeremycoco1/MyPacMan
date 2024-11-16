@@ -1,6 +1,6 @@
 package Model;
 
-import View.PlayerManager;
+import Control.PlayerManager;
 
 import java.awt.*;
 
@@ -10,6 +10,7 @@ import static View.SettingsDimension.*;
 public class Coins {
 
     PlayerManager pl;
+
     private boolean[][] coins;
     private boolean[][] bigCoins;
     public int powerModeTimer = 0;
@@ -27,6 +28,7 @@ public class Coins {
 
     public Coins(PlayerManager playerManager) {
         this.pl = playerManager;
+
         coins = new boolean[maxMapCol][maxMapRow];
         this.bigCoins = new boolean[maxMapCol][maxMapRow];
         initializeCoins();
@@ -77,9 +79,6 @@ public class Coins {
 
     public void addScore(int points) {
         score += points;
-//        if (score > highScore) {
-//            highScore = score;
-//        }
     }
     public void updateHighScore() {
         if (score > highScore) {

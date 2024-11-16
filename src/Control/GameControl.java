@@ -1,30 +1,27 @@
 package Control;
 
 import View.GamePanel;
-import View.PlayerManager;
 
 import javax.swing.*;
-import java.awt.*;
 
 
 public class GameControl extends JPanel implements Runnable {
-
-    PlayerManager pl = PlayerManager.getInstance();
-
-    KeyHandler keyH = KeyHandler.getInstance();
+    PlayerManager pl;
+    KeyHandler keyH;
+    GamePanel gp;
 
     Thread gameThread;
     int FPS = 60;
-    GamePanel gp;
 
-    public GameControl() {
 
+    public GameControl(PlayerManager pl, KeyHandler keyH, GamePanel gp) {
+        this.pl = pl;
+        this.keyH = keyH;
+        this.gp = gp;
         this.addKeyListener(keyH);
-        this.gp = GamePanel.getInstance();
         this.gp.addKeyListener(keyH);
 
     }
-
 
 
     public void startGameThread() {

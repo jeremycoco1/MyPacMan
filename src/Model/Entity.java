@@ -22,7 +22,6 @@ public abstract class Entity {
     public int blueGhostPosY;
 
     public int ghostSize;
-//    public int ghostSpeed;
     public int speed;
 
     public BufferedImage blueG, greenG, purpleG, redG;

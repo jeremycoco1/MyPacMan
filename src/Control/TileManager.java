@@ -1,6 +1,5 @@
-package View;
+package Control;
 
-import Control.CollisionChecker;
 import Model.Map;
 import Model.Tiles;
 
