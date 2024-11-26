@@ -10,6 +10,7 @@ public class GameControl extends JPanel implements Runnable {
     KeyHandler keyH;
     GamePanel gp;
 
+
     Thread gameThread;
     int FPS = 60;
 
@@ -18,6 +19,7 @@ public class GameControl extends JPanel implements Runnable {
         this.pl = pl;
         this.keyH = keyH;
         this.gp = gp;
+
         this.addKeyListener(keyH);
         this.gp.addKeyListener(keyH);
 
@@ -58,8 +60,7 @@ public class GameControl extends JPanel implements Runnable {
     public void update() {
         if (!keyH.pausePressed) {
             pl.update();
-            pl.getGhosts().updateGhosts();
-
+           pl.getGhosts().updateGhosts();
         }
     }
 

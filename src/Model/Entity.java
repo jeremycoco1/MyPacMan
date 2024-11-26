@@ -9,17 +9,10 @@ public abstract class Entity {
     public int pcPosX;
     public int pcPosY;
 
-    public int redGhostPosX;
-    public int redGhostPosY;
-
-    public int greenGhostPosX;
-    public int greenGhostPosY;
-
-    public int purpleGhostPosX;
-    public int purpleGhostPosY;
-
-    public int blueGhostPosX;
-    public int blueGhostPosY;
+    public Ghost redGhost;
+    public Ghost greenGhost;
+    public Ghost purpleGhost;
+    public Ghost blueGhost;
 
     public int ghostSize;
     public int speed;
@@ -34,6 +27,7 @@ public abstract class Entity {
     public int spriteNum = 1;
     public Rectangle solidArea;
     public boolean collisionOn;
+
 
 
 }

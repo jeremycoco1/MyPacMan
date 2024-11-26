@@ -1,6 +1,7 @@
 package Control;
 
 import Model.Entity;
+import Model.Ghost;
 import Model.Map;
 
 import static View.SettingsDimension.tilesSize;
@@ -35,7 +36,7 @@ public class CollisionChecker {
                 tileNum1 = map.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = map.mapTileNum[entityRightCol][entityTopRow];
                 if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
-                    System.out.println("Collision up ");
+
                     entity.collisionOn = true;
                 }
                 break;
@@ -45,7 +46,7 @@ public class CollisionChecker {
                 tileNum1 = map.mapTileNum[entityLeftCol][entityBottomRow];
                 tileNum2 = map.mapTileNum[entityRightCol][entityBottomRow];
                 if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
-                    System.out.println("Collision down ");
+
                     entity.collisionOn = true;
                 }
                 break;
@@ -55,7 +56,7 @@ public class CollisionChecker {
                 tileNum1 = map.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = map.mapTileNum[entityLeftCol][entityBottomRow];
                 if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
-                    System.out.println("Collision left ");
+
                     entity.collisionOn = true;
                 }
                 break;
@@ -65,14 +66,68 @@ public class CollisionChecker {
                 tileNum1 = map.mapTileNum[entityRightCol][entityTopRow];
                 tileNum2 = map.mapTileNum[entityRightCol][entityBottomRow];
                 if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
-                    System.out.println("Collision right ");
+
                     entity.collisionOn = true;
                 }
                 break;
         }
-
-
     }
 
+    public boolean checkTile(Ghost ghost, int speed) {
+        int entityLeftX = ghost.x;
+        int entityRightX = ghost.x  ;
+        int entityTopY = ghost.y ;
+        int entityBottomY = ghost.y ;
+
+
+        int entityLeftCol = entityLeftX / tilesSize;
+        int entityRightCol = entityRightX / tilesSize;
+        int entityTopRow = entityTopY / tilesSize;
+        int entityBottomRow = entityBottomY / tilesSize;
+
+        int tileNum1, tileNum2;
+
+        switch (ghost.direction) {
+            case "up":
+                entityTopRow = (entityTopY - speed) / tilesSize;
+                tileNum1 = map.mapTileNum[entityLeftCol][entityTopRow];
+                tileNum2 = map.mapTileNum[entityRightCol][entityTopRow];
+                if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
+
+                    ghost.collisionOn = true;
+                }
+                break;
+
+            case "down":
+                entityBottomRow = (entityBottomY + speed) / tilesSize;
+                tileNum1 = map.mapTileNum[entityLeftCol][entityBottomRow];
+                tileNum2 = map.mapTileNum[entityRightCol][entityBottomRow];
+                if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
+                    ghost.collisionOn = true;
+                }
+                break;
+
+            case "left":
+                entityLeftCol = (entityLeftX - speed) / tilesSize;
+                tileNum1 = map.mapTileNum[entityLeftCol][entityTopRow];
+                tileNum2 = map.mapTileNum[entityLeftCol][entityBottomRow];
+                if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
+
+                    ghost.collisionOn = true;
+                }
+                break;
+
+            case "right":
+                entityRightCol = (entityRightX + speed) / tilesSize;
+                tileNum1 = map.mapTileNum[entityRightCol][entityTopRow];
+                tileNum2 = map.mapTileNum[entityRightCol][entityBottomRow];
+                if (tm.tile[tileNum1].collision == true || tm.tile[tileNum2].collision == true) {
+
+                    ghost.collisionOn = true;
+                }
+                break;
+        }
+        return ghost.collisionOn;
+    }
 }
 

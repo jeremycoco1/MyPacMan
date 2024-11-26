@@ -2,6 +2,7 @@ package Control;
 
 import Model.Coins;
 import Model.Entity;
+import Model.Ghost;
 
 
 import javax.imageio.ImageIO;
@@ -21,6 +22,7 @@ public class PlayerManager extends Entity {
     GhostsManager ghosts;
     FruitManager fruits;
     TileManager tm;
+//    Blinky blinky=new Blinky(this);
 
 
     private int lives = 3;
@@ -28,23 +30,23 @@ public class PlayerManager extends Entity {
 
 
     private boolean isGameOver = false;
-    private long gameOverDelay = 1500; // Délai de 1.5 secondes avant reset
+    private long gameOverDelay = 3000; // Délai de 3 secondes avant reset
     private long deathTime = 0;
-    private boolean waitingForInput = false;
 
 
-    private int lastFruitSpawnScore = 0;
+
+    private int lastFruitSpawnScore = 0;  //score d aparition
     private static final int SCORE_INTERVAL_FOR_FRUIT = 200; // Spawn interval
     private static final int MINIMUM_SCORE_FOR_FRUIT = 50;
 
-    public PlayerManager(KeyHandler keyH,
-                         CollisionChecker cc,
-                         TileManager tm) {
+    public PlayerManager(KeyHandler keyH,CollisionChecker cc,TileManager tm) {
+
+
         this.keyH = keyH;
         this.cc = cc;
         this.tm = tm;
-        pcPosX = 13 * tilesSize - tilesSize;
-        pcPosY = 21 * tilesSize;
+
+
         solidArea = new Rectangle();
         solidArea.x = 6;
         solidArea.y = 6;
@@ -54,18 +56,12 @@ public class PlayerManager extends Entity {
         this.coins = new Coins(this);
         this.ghosts = new GhostsManager(this, cc);
         this.fruits = new FruitManager(this, tm);
+
         setDefaultValues();
         getPlayerImage();
 
 
     }
-
-//    public static PlayerManager getInstance() {
-//        if (playerInstance == null) {
-//            playerInstance = new PlayerManager();
-//        }
-//        return playerInstance;
-//    }
 
     public int getPcPosX() {
         return pcPosX;
@@ -79,6 +75,8 @@ public class PlayerManager extends Entity {
         return coins;
     }
 
+//    public Blinky getBlinky(){return blinky;}
+
     public GhostsManager getGhosts() {
         return ghosts;
     }
@@ -87,12 +85,9 @@ public class PlayerManager extends Entity {
         return fruits;
     }
 
-    public boolean isInvincible() {
-        return invincible;
-    }
-
     public void setDefaultValues() {
-
+        pcPosX = 13 * tilesSize - tilesSize;
+        pcPosY = 21 * tilesSize;
         speed = 2;
         direction = "down";
     }
@@ -126,57 +121,45 @@ public class PlayerManager extends Entity {
         }
     }
 
+    public void handlePowerModeCollision() {
 
-    public void handlePowerModeCollision(GhostsManager ghosts) {
-        // Pour chaque fantôme
         for (int i = 0; i < getGhosts().getGhostCount(); i++) {
-            // Vérifier si le joueur est en collision avec le fantôme
+
             if (checkGhostCollision(i)) {
                 if (coins.powerMode) {
-                    // Si en mode power, le fantôme est mangé
                     ghosts.resetPosition(i);
                     coins.addScore(200);
                 } else {
-                    // Si pas en mode power, Pacman meurt
                     die();
                 }
             }
         }
     }
 
-    // Ajouter cette nouvelle méthode pour vérifier la collision avec un fantôme spécifique
     private boolean checkGhostCollision(int ghostIndex) {
-        int ghostX = 0;
-        int ghostY = 0;
-
-        // Obtenir la position du fantôme spécifique
+        Ghost currentGhost;
         switch (ghostIndex) {
             case 0:
-                ghostX = ghosts.redGhostPosX;
-                ghostY = ghosts.redGhostPosY;
+                currentGhost = ghosts.redGhost;
                 break;
             case 1:
-                ghostX = ghosts.blueGhostPosX;
-                ghostY = ghosts.blueGhostPosY;
+                currentGhost = ghosts.blueGhost;
                 break;
             case 2:
-                ghostX = ghosts.purpleGhostPosX;
-                ghostY = ghosts.purpleGhostPosY;
+                currentGhost = ghosts.purpleGhost;
                 break;
-            case 3:
-                ghostX = ghosts.greenGhostPosX;
-                ghostY = ghosts.greenGhostPosY;
+            default:
+                currentGhost = ghosts.greenGhost;
                 break;
         }
 
-        // Calculer les rectangles de collision
         Rectangle pacmanArea = new Rectangle(pcPosX + solidArea.x,
                 pcPosY + solidArea.y,
                 solidArea.width,
                 solidArea.height);
 
-        Rectangle ghostArea = new Rectangle(ghostX + ghosts.solidArea.x,
-                ghostY + ghosts.solidArea.y,
+        Rectangle ghostArea = new Rectangle(currentGhost.x + ghosts.solidArea.x,
+                currentGhost.y + ghosts.solidArea.y,
                 ghosts.solidArea.width,
                 ghosts.solidArea.height);
 
@@ -185,36 +168,15 @@ public class PlayerManager extends Entity {
 
     public void update() {
         fruits.update();
-        if (waitingForInput) {
-            if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-                waitingForInput = false;  // Le joueur peut maintenant bouger
-            } else {
-                return;  // Ne pas continuer l'update si on attend toujours l'input
-            }
-        }
+//        blinky.updateGhost();
+
         if (coins.score >= MINIMUM_SCORE_FOR_FRUIT &&
                 coins.score >= lastFruitSpawnScore + SCORE_INTERVAL_FOR_FRUIT) {
             fruits.spawn(coins.score);
             lastFruitSpawnScore = coins.score;
         }
-        if (keyH.pausePressed || isGameOver) {
-            if (isGameOver) {
-                if (System.currentTimeMillis() - deathTime >= gameOverDelay) {
-                    if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-                        resetGame();
-                    }
-                }
-            }
-            return;
-        }
 
-//        if (coins.powerMode) {
-//            coins.powerModeTimer--;
-//            if (coins.powerModeTimer <= 0) {
-//                coins.powerMode = false;
-//                ghosts.setVulnerable(false);  // Ajouter cette ligne
-//            }
-//        }
+
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             if (keyH.upPressed) {
                 direction = "up";
@@ -261,7 +223,7 @@ public class PlayerManager extends Entity {
                     ghosts.setVulnerable(false);  // Ajouter cette ligne
                 }
             }
-            handlePowerModeCollision(ghosts);
+            handlePowerModeCollision();
             spriteCounter++;
             if (spriteCounter > 10) {
                 if (spriteNum == 1) {
@@ -278,7 +240,6 @@ public class PlayerManager extends Entity {
 
 
     }
-
 
     public void draw(Graphics2D g2) {
 
@@ -333,10 +294,23 @@ public class PlayerManager extends Entity {
         if (keyH.pausePressed && !isGameOver) {
             drawPauseScreen(g2);
         }
-        if (isGameOver) {
-            drawGameOver(g2);
+       if (keyH.pausePressed || isGameOver) {
+           drawGameOver(g2);
+            if (isGameOver) {
+                if (System.currentTimeMillis() - deathTime >= gameOverDelay) {
+                    if (keyH.upPressed || keyH.downPressed ||
+                            keyH.leftPressed || keyH.rightPressed) {
+                        resetGame();
+
+                    }
+                }
+            }
+
         }
+
     }
+
+
 
     private void drawPauseScreen(Graphics2D g2) {
         g2.setColor(new Color(0, 0, 0, 180)); // Fond semi-transparent
@@ -400,24 +374,26 @@ public class PlayerManager extends Entity {
 
     private void handleGameOver() {
         isGameOver = true;
-        deathTime = System.currentTimeMillis();
         coins.updateHighScore();  // Mettre à jour le high score
-        waitingForInput = false;  // Réinitialiser l'attente d'input
+//        waitingForInput = true;  // Réinitialiser l'attente d'input
     }
+
 
     public void resetGame() {
         lives = 3;
         int previousHighScore = coins.getHighScore();
         coins.score = 0;
         isGameOver = false;
-        resetPosition();
-        waitingForInput = true;  // Attendre l'input après reset
         ghosts.initializeGhostsPos();
         coins = new Coins(this);
         coins.highScore = previousHighScore;
-        direction = "right";  // Direction initiale
-    }
+        keyH.upPressed = false;
+        keyH.downPressed = false;
+        keyH.leftPressed = false;
+        keyH.rightPressed = false;
 
+        resetPosition();
+    }
     public void drawGameOver(Graphics2D g2) {
         if (isGameOver) {
             g2.setColor(new Color(0, 0, 0, 180)); // Fond semi-transparent
@@ -441,6 +417,7 @@ public class PlayerManager extends Entity {
 
             // Message pour recommencer
             if (System.currentTimeMillis() - deathTime >= gameOverDelay) {
+//
                 g2.setColor(Color.WHITE);
                 g2.setFont(new Font("Arial", Font.PLAIN, 20));
                 String restartText = "Press any key to restart";
@@ -455,7 +432,10 @@ public class PlayerManager extends Entity {
     public void resetPosition() {
         pcPosX = 13 * tilesSize - tilesSize;
         pcPosY = 21 * tilesSize;
-        direction = "right";
-        waitingForInput = true;  // Attendre l'input après reset de position
+        direction = "down";
+        keyH.upPressed = false;
+        keyH.downPressed = false;
+        keyH.leftPressed = false;
+        keyH.rightPressed = false;
     }
 }

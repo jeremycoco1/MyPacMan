@@ -1,12 +1,14 @@
 package Control;
 
 import Model.Entity;
+import Model.Ghost;
 
 import javax.imageio.ImageIO;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 import static View.SettingsDimension.*;
@@ -14,15 +16,15 @@ import static View.SettingsDimension.*;
 public class GhostsManager extends Entity {
     CollisionChecker cc;
     PlayerManager pl;
-    private Random random;
+    Random random;
 
 
-    // Positions initiales des fantômes
+
     private int[][] ghostPositions = {
-            {10 * tilesSize, 10 * tilesSize}, // Red ghost
-            {12 * tilesSize, 10 * tilesSize}, // Blue ghost
-            {14 * tilesSize, 10 * tilesSize}, // Purple ghost
-            {12 * tilesSize, 9 * tilesSize}  // Green ghost
+            {10 * tilesSize, 10 * tilesSize},
+            {12 * tilesSize, 10 * tilesSize},
+            {14 * tilesSize, 10 * tilesSize},
+            {12 * tilesSize, 9 * tilesSize}
     };
     public int ghostSpeed = 2;
     private String[] ghostDirections = {"up", "down", "left", "right"};
@@ -43,21 +45,12 @@ public class GhostsManager extends Entity {
         loadGhostImages();
     }
 
-    public void initializeGhostsPos() {
-        // Initialisation des positions
-        redGhostPosX = ghostPositions[0][0];
-        redGhostPosY = ghostPositions[0][1];
-        blueGhostPosX = ghostPositions[1][0];
-        blueGhostPosY = ghostPositions[1][1];
-        purpleGhostPosX = ghostPositions[2][0];
-        purpleGhostPosY = ghostPositions[2][1];
-        greenGhostPosX = ghostPositions[3][0];
-        greenGhostPosY = ghostPositions[3][1];
 
-        // Initialisation des directions aléatoires
-        for (int i = 0; i < currentDirections.length; i++) {
-            currentDirections[i] = ghostDirections[random.nextInt(ghostDirections.length)];
-        }
+    public void initializeGhostsPos() {
+        redGhost = new Ghost(ghostPositions[0][0], ghostPositions[0][1], speed);
+        blueGhost = new Ghost(ghostPositions[1][0], ghostPositions[1][1], speed);
+        purpleGhost = new Ghost(ghostPositions[2][0], ghostPositions[2][1], speed);
+        greenGhost = new Ghost(ghostPositions[3][0], ghostPositions[3][1], speed);
     }
 
     private void loadGhostImages() {
@@ -72,63 +65,18 @@ public class GhostsManager extends Entity {
     }
 
     public void updateGhostPosition(int ghostIndex) {
-        int[] positions = {redGhostPosX, redGhostPosY, blueGhostPosX, blueGhostPosY,
-                purpleGhostPosX, purpleGhostPosY, greenGhostPosX, greenGhostPosY};
+        Ghost[] positions = {redGhost, blueGhost, purpleGhost, greenGhost };
 
-        // Change direction aléatoirement (10% de chance à chaque mise à jour)
-        if (random.nextInt(100) < 10) {
-            currentDirections[ghostIndex] = ghostDirections[random.nextInt(ghostDirections.length)];
-        }
+        Ghost cur = positions[ghostIndex];
 
-        // Sauvegarde de l'ancienne position
-        int oldX = positions[ghostIndex * 2];
-        int oldY = positions[ghostIndex * 2 + 1];
 
-        // Mise à jour de la position en fonction de la direction
-        switch (currentDirections[ghostIndex]) {
-            case "up":
-                positions[ghostIndex * 2 + 1] -= speed;
-                break;
-            case "down":
-                positions[ghostIndex * 2 + 1] += speed;
-                break;
-            case "left":
-                positions[ghostIndex * 2] -= speed;
-                if (positions[ghostIndex * 2] <= 8) {
-                    positions[ghostIndex * 2] = 24 * 25 - 8;
-                }
-                break;
-            case "right":
-                positions[ghostIndex * 2] += speed;
-                if (positions[ghostIndex * 2] >= 24 * 25 - 22) {
-                    positions[ghostIndex * 2] = 8;
-                }
-                break;
-        }
 
-        // Vérification des collisions
-        pcPosX = positions[ghostIndex * 2];
-        pcPosY = positions[ghostIndex * 2 + 1];
-        direction = currentDirections[ghostIndex];  // Ajoutez cette ligne
-        collisionOn = false;
-        cc.checkTile(this);
 
-        // Si collision détectée, revenir à l'ancienne position et changer de direction
-        if (collisionOn) {
-            positions[ghostIndex * 2] = oldX;
-            positions[ghostIndex * 2 + 1] = oldY;
-            currentDirections[ghostIndex] = ghostDirections[random.nextInt(ghostDirections.length)];
-        }
 
-        // Mise à jour des positions des fantômes
-        redGhostPosX = positions[0];
-        redGhostPosY = positions[1];
-        blueGhostPosX = positions[2];
-        blueGhostPosY = positions[3];
-        purpleGhostPosX = positions[4];
-        purpleGhostPosY = positions[5];
-        greenGhostPosX = positions[6];
-        greenGhostPosY = positions[7];
+        cur.updateGhostPosition();
+
+
+
     }
 
     public void updateGhosts() {
@@ -138,7 +86,7 @@ public class GhostsManager extends Entity {
     }
 
     public int getGhostCount() {
-        return 4; // Il y a 4 fantômes dans notre jeu
+        return 4;
     }
 
 
@@ -152,20 +100,16 @@ public class GhostsManager extends Entity {
         // Réinitialiser la position du fantôme à sa position initiale
         switch (ghostIndex) {
             case 0:
-                redGhostPosX = ghostPositions[0][0];
-                redGhostPosY = ghostPositions[0][1];
+                redGhost.reset();
                 break;
             case 1:
-                blueGhostPosX = ghostPositions[1][0];
-                blueGhostPosY = ghostPositions[1][1];
+                blueGhost.reset();
                 break;
             case 2:
-                purpleGhostPosX = ghostPositions[2][0];
-                purpleGhostPosY = ghostPositions[2][1];
+                purpleGhost.reset();
                 break;
             case 3:
-                greenGhostPosX = ghostPositions[3][0];
-                greenGhostPosY = ghostPositions[3][1];
+                greenGhost.reset();
                 break;
         }
     }
@@ -175,33 +119,29 @@ public class GhostsManager extends Entity {
         for (int i = 0; i < 4; i++) {
             int x, y;
             BufferedImage ghostImage;
-
+            Ghost currentGhost;
             switch (i) {
                 case 0:
-                    x = redGhostPosX;
-                    y = redGhostPosY;
+                    currentGhost = redGhost;
                     ghostImage = isVulnerable[i] ? blueG : redG;
                     break;
                 case 1:
-                    x = blueGhostPosX;
-                    y = blueGhostPosY;
+                    currentGhost = blueGhost;
                     ghostImage = isVulnerable[i] ? blueG : blueG;
                     break;
                 case 2:
-                    x = purpleGhostPosX;
-                    y = purpleGhostPosY;
+                    currentGhost = purpleGhost;
                     ghostImage = isVulnerable[i] ? blueG : purpleG;
                     break;
                 case 3:
-                    x = greenGhostPosX;
-                    y = greenGhostPosY;
+                    currentGhost = greenGhost;
                     ghostImage = isVulnerable[i] ? blueG : greenG;
                     break;
                 default:
                     continue;
             }
 
-            g2.drawImage(ghostImage, x, y, ghostSize, ghostSize, null);
+            g2.drawImage(ghostImage, currentGhost.x, currentGhost.y, ghostSize, ghostSize, null);
         }
     }
 

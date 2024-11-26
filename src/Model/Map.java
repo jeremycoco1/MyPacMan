@@ -1,8 +1,11 @@
 package Model;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import static View.SettingsDimension.maxMapCol;
 import static View.SettingsDimension.maxMapRow;
@@ -43,4 +46,17 @@ public class Map {
         }
     }
 
+    public static List <Point> pathPoint() {
+
+        List<Point> points = new ArrayList<>();
+        for (int col = 0; col < maxMapCol; col++) {
+            for (int row = 0; row < maxMapRow; row++) {
+                if (mapTileNum[col][row] == 1) {
+                    Point p = new Point(row*24, col*24);
+                    points.add(p);
+                }
+            }
+        }
+return points;
+    }
 }

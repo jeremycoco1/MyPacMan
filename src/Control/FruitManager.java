@@ -134,11 +134,7 @@ public class FruitManager {
         return null;
     }
 
-//    private boolean isValidPosition(int x, int y) {
-//        // Vérifier si la position n'est pas sur un mur
-//        // Vous devrez adapter cette méthode selon votre système de collision
-//        return true; // Implémentez la logique de vérification selon votre jeu
-//    }
+
 
     public void draw(Graphics2D g2) {
         if (!isVisible || currentFruit == null) return;

@@ -38,6 +38,7 @@ public class GamePanel extends JPanel {
         pl.drawScore(g2);
         pl.drawLives(g2);
         pl.getGhosts().drawGhosts(g2);
+//        pl.getBlinky().drawBlinki(g2);
         pl.getFruits().draw(g2);
         g2.dispose();
     }

@@ -1,9 +1,5 @@
-import Control.CollisionChecker;
-import Control.GameControl;
-import Control.KeyHandler;
+import Control.*;
 import View.GamePanel;
-import Control.PlayerManager;
-import Control.TileManager;
 import View.WindowManager;
 
 
@@ -17,6 +13,7 @@ public class Main {
         CollisionChecker cc = new CollisionChecker(tm);
         PlayerManager pl = new PlayerManager(keyH, cc,tm);
         GamePanel gp = new GamePanel(pl, keyH,tm);
+
         WindowManager window = new WindowManager(gp);
         GameControl gc = new GameControl(pl, keyH, gp);
         gc.startGameThread();
